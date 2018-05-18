@@ -1,0 +1,53 @@
+doctype html
+html
+  head
+    title
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    script(type="text/javascript").
+      $(document).ready(function() {
+      var pelis = !{peliculas};
+      printTable(pelis);
+      });
+      function printTable(pelis){
+      var table = $(".tbody");
+      for(var i = 0; i < pelis.length; i++){
+      var peli = pelis[i];
+      var tr = "<tr>"
+      .concat("<td>")
+      .concat(peli.Titol)
+      .concat("</td><td>")
+      .concat(peli.Sinopsi)
+      .concat("</td><td><button type='button' onclick='del(")
+      .concat(peli.Codpeli)
+      .concat(")'>Eliminar</button>")
+      .concat("</td></tr>")
+      table.append(tr);
+      }
+      }
+      function del(codpeli){
+      $.ajax({
+      type: 'post',
+      url: 'http://localhost:8000/peliculas/del',
+      data: {"Codpeli":codpeli},
+      async: false,
+      success: function (ok) {
+      location.reload();
+      }
+      });
+      }
+  body
+    table.table
+      thead
+        tr
+          th
+            | Pelicula
+          th Desc
+          th
+      tbody.tbody
+      tfoot
+        tr
+          td(colspan="2")
+            form(action="http://localhost:8000/peliculas/add")
+              input(type="text" name="titol")
+              textarea(cols="50" rows="1" name="Sinopsi")
+              button(type="submit") Añadir
